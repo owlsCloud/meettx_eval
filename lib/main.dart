@@ -1,7 +1,7 @@
-import 'package:meettx_eval/widget_tree.dart';
+import 'package:meettx_eval/pages/home.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:meettx_eval/pages/test.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: const WidgetTree(),
+      home: HomePage(),
     );
   }
 }
