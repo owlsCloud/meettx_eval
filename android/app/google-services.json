@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "746161367580",
+    "project_id": "eval-71381",
+    "storage_bucket": "eval-71381.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746161367580:android:bcab3172f9c732645e4dd9",
+        "android_client_info": {
+          "package_name": "com.example.meettx_eval"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746161367580-vjpaggpfpmvf2i11g3e0dih1sqc2ivmf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATPHsVjrCbt0HwvVaGrVgevecitfkFs3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746161367580-vjpaggpfpmvf2i11g3e0dih1sqc2ivmf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
