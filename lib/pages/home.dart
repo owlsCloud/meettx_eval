@@ -12,36 +12,12 @@ class HomePage extends StatelessWidget {
     await Auth().signOut();
   }
 
-  Widget _title() {
-    return const Text('Firebase Auth');
-  }
-
-  Widget _userUid() {
-    return Text(user?.email ?? 'User email');
-  }
-
-  Widget _signOutButton() {
-    return ElevatedButton(
-      onPressed: signOut,
-      child: const Text('Sign Out'),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: _title(),
-        ),
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return HomePage();
-            } else {
-              return LoginPage();
-            }
-          },
-        ));
+      appBar: AppBar(
+        title: const Text("Home"),
+      ),
+    );
   }
 }
