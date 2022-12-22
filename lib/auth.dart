@@ -1,39 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:meettx_eval/pages/login.dart';
+import 'package:meettx_eval/pages/signup.dart';
 
-class Auth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+class AuthPage extends StatefulWidget {
+  const AuthPage({Key? key}) : super(key: key);
 
-  User? get currentUser => _firebaseAuth.currentUser;
+  @override
+  _AuthPageState createState() => _AuthPageState();
+}
 
-  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+class _AuthPageState extends State<AuthPage> {
+  bool isLogin = true;
 
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  }) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
-  }
-
-  Future<void> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
-
-  Future<void> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
-
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-  }
+  @override
+  Widget build(BuildContext context) => isLogin
+      ? LoginPage(onClickedSignUp: toggle)
+      : SignUpPage(onClickedSignIn: toggle);
+  void toggle() => setState(() => isLogin = !isLogin);
 }

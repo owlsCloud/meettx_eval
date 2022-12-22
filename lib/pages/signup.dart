@@ -1,22 +1,19 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meettx_eval/main.dart';
 
-class LoginPage extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
-  const LoginPage({Key? key, required this.onClickedSignUp}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  final Function() onClickedSignIn;
+  const SignUpPage({Key? key, required this.onClickedSignIn}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String? errorMessage = '';
-  bool isLogin = true;
-
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) => Scaffold(
       body: Padding(
@@ -42,28 +39,32 @@ class _LoginPageState extends State<LoginPage> {
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50)),
               icon: const Icon(Icons.lock_open, size: 32),
-              label: const Text('Sign In', style: TextStyle(fontSize: 24)),
-              onPressed: signIn,
+              label: const Text('Sign Up', style: TextStyle(fontSize: 24)),
+              onPressed: signUp,
             ),
             const SizedBox(height: 24),
             RichText(
                 text: TextSpan(
                     style: const TextStyle(color: Colors.black, fontSize: 20),
-                    text: 'Want to make an account?',
+                    text: 'Already have an account?',
                     children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
-                        ..onTap = widget.onClickedSignUp,
-                      text: 'Sign Up',
+                        ..onTap = widget.onClickedSignIn,
+                      text: 'Log In',
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Theme.of(context).colorScheme.secondary))
                 ]))
           ])));
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim());
+  Future signUp() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+    } on FirebaseAuthException catch (err) {
+      print(err);
+    }
   }
 }

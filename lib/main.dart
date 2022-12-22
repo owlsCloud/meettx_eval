@@ -1,4 +1,4 @@
-import 'package:meettx_eval/pages/login.dart';
+import 'package:meettx_eval/auth.dart';
 import 'package:meettx_eval/pages/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData) {
               return HomePage();
             } else {
-              return const LoginPage();
+              return AuthPage();
             }
           },
         )));
