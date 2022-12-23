@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,12 +60,17 @@ class _SignUpPageState extends State<SignUpPage> {
           ])));
 
   Future signUp() async {
+    String email = emailController.text.trim();
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+          email: email, password: passwordController.text.trim());
     } on FirebaseAuthException catch (err) {
       print(err);
     }
+    final user = FirebaseFirestore.instance
+        .collection('users')
+        .doc(emailController.text);
+    final data = {'email': email};
+    user.set(data);
   }
 }
