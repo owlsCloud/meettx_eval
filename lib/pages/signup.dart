@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meettx_eval/main.dart';
+import 'package:meettx_eval/firestoreHelper.dart';
+import 'package:meettx_eval/user_model.dart';
 
 class SignUpPage extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -14,7 +15,9 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isError = false;
   @override
   Widget build(BuildContext context) => Scaffold(
       body: Padding(
@@ -22,17 +25,24 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 4),
             TextField(
+              controller: nameController,
+              cursorColor: Colors.white,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            const SizedBox(height: 4),
+            TextField(
               controller: emailController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             const SizedBox(height: 4),
             TextField(
               controller: passwordController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.done,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
@@ -56,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Theme.of(context).colorScheme.secondary))
-                ]))
+                ])),
           ])));
 
   Future signUp() async {
@@ -67,10 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseAuthException catch (err) {
       print(err);
     }
-    final user = FirebaseFirestore.instance
-        .collection('users')
-        .doc(emailController.text);
-    final data = {'email': email};
-    user.set(data);
+    FirestoreHelper.create(
+        UserModel(name: nameController.text, email: emailController.text));
   }
 }

@@ -1,51 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meettx_eval/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meettx_eval/firestoreHelper.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-    bool hasName = false;
-    Future addName({required String name, required String email}) async {
-      final user = FirebaseFirestore.instance.collection('users').doc(email);
-      final data = {'name': name};
-      await user.set(data);
-      hasName = true;
-    }
-
-    final TextEditingController nameController = TextEditingController();
+    final userEmail = user.email;
     return Scaffold(
       appBar: AppBar(
-        title: hasName ? Text('a') : Text(user.email!),
+        title: Text(userEmail!),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 4),
-            TextField(
-              controller: nameController,
-              cursorColor: Colors.white,
-              textInputAction: TextInputAction.next,
-              decoration:
-                  const InputDecoration(labelText: 'What is your name?'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50)),
-              onPressed: () {
-                final name = nameController.text;
-
-                addName(name: name, email: user.email!);
-              },
-              child: const Text("Add name"),
-            ),
+            const SizedBox(height: 16),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(userEmail)
+                    .snapshots(),
+                builder: ((context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  var userDoc = snapshot.data!;
+                  return Text("Hello ${userDoc["name"]}");
+                })),
             const Spacer(),
             const SizedBox(height: 40),
             ElevatedButton.icon(
