@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 16),
+            // Streambuilder always listens, Futurebuilder listens once
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("users")
