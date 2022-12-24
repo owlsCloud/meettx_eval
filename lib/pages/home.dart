@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:meettx_eval/firestoreHelper.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,10 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     final userEmail = user.email;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(userEmail!),
@@ -24,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             // Streambuilder always listens, Futurebuilder listens once
             StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -38,8 +42,30 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   var userDoc = snapshot.data!;
-                  return Text("Hello ${userDoc["name"]}");
+                  return Text(
+                    "Hello ${userDoc["name"]}",
+                    style: const TextStyle(fontSize: 28),
+                  );
                 })),
+            const SizedBox(height: 4),
+            TextField(
+              controller: nameController,
+              cursorColor: Colors.white,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                  labelText: 'Would you like to change your name?'),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(40)),
+              onPressed: () =>
+                  FirestoreHelper.updateName(user, nameController.text),
+              child: const Text(
+                'Change name',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             const Spacer(),
             const SizedBox(height: 40),
             ElevatedButton.icon(

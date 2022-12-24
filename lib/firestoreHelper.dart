@@ -15,10 +15,15 @@ class FirestoreHelper {
     }
   }
 
-  // static String read(user) async {
+  static Future updateName(user, newName) async {
+    final userCollection = FirebaseFirestore.instance.collection('users');
 
-  //   final userDoc =
-  //       FirebaseFirestore.instance.collection('users').doc(user.email);
+    final docRef = userCollection.doc(user.email);
 
-  // }
+    try {
+      await docRef.update({'name': newName});
+    } catch (e) {
+      print(e);
+    }
+  }
 }
