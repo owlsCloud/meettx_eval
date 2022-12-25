@@ -18,10 +18,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     final userEmail = user.email;
+    void handleUpdate() {
+      FirestoreHelper.updateName(user, nameController.text);
+      nameController.clear();
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userEmail!),
+        title: const Text("Home"),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: () => FirebaseAuth.instance.signOut(),
+              child: const Icon(Icons.logout),
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(32),
@@ -34,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                 stream: FirebaseFirestore.instance
                     .collection("users")
                     .doc(userEmail)
-                    .snapshots(),
+                    .snapshots(), // snapshot = JSON object
                 builder: ((context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(
@@ -42,11 +55,13 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   var userDoc = snapshot.data!;
+
                   return Text(
                     "Hello ${userDoc["name"]}",
-                    style: const TextStyle(fontSize: 28),
+                    style: const TextStyle(fontSize: 32),
                   );
                 })),
+            Spacer(),
             const SizedBox(height: 4),
             TextField(
               controller: nameController,
@@ -55,29 +70,17 @@ class _HomePageState extends State<HomePage> {
               decoration: const InputDecoration(
                   labelText: 'Would you like to change your name?'),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(40)),
-              onPressed: () =>
-                  FirestoreHelper.updateName(user, nameController.text),
+              onPressed: handleUpdate,
               child: const Text(
                 'Change name',
                 style: TextStyle(fontSize: 20),
               ),
             ),
-            const Spacer(),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50)),
-              icon: const Icon(Icons.arrow_back, size: 32),
-              label: const Text(
-                'Sign Out',
-                style: TextStyle(fontSize: 24),
-              ),
-              onPressed: () => FirebaseAuth.instance.signOut(),
-            )
+            const Spacer()
           ],
         ),
       ),

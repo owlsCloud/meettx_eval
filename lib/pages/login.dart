@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -23,24 +24,35 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(20),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 4),
-            TextField(
+            TextFormField(
               controller: emailController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (email) =>
+                  email != null && !EmailValidator.validate(email)
+                      ? 'Invalid email'
+                      : null,
             ),
             const SizedBox(height: 4),
-            TextField(
+            TextFormField(
               controller: passwordController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.done,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => value != null && value.length < 6
+                  ? 'Password must be atleas 6 characters'
+                  : null,
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50)),
+                  minimumSize: const Size.fromHeight(50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30))),
               icon: const Icon(Icons.lock_open, size: 32),
               label: const Text('Sign In', style: TextStyle(fontSize: 24)),
               onPressed: signIn,
@@ -49,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             RichText(
                 text: TextSpan(
                     style: const TextStyle(color: Colors.black, fontSize: 20),
-                    text: 'Want to make an account?',
+                    text: 'Want to make an account? ',
                     children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()

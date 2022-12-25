@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meettx_eval/firestoreHelper.dart';
 import 'package:meettx_eval/user_model.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SignUpPage extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -31,24 +31,35 @@ class _SignUpPageState extends State<SignUpPage> {
               decoration: const InputDecoration(labelText: 'Name'),
             ),
             const SizedBox(height: 4),
-            TextField(
+            TextFormField(
               controller: emailController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Email'),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (email) =>
+                  email != null && !EmailValidator.validate(email)
+                      ? 'Invalid email'
+                      : null,
             ),
             const SizedBox(height: 4),
-            TextField(
+            TextFormField(
               controller: passwordController,
               cursorColor: Colors.white,
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => value != null && value.length < 6
+                  ? 'Password must be atleas 6 characters'
+                  : null,
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50)),
+                  minimumSize: const Size.fromHeight(50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30))),
               icon: const Icon(Icons.lock_open, size: 32),
               label: const Text('Sign Up', style: TextStyle(fontSize: 24)),
               onPressed: signUp,
@@ -57,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
             RichText(
                 text: TextSpan(
                     style: const TextStyle(color: Colors.black, fontSize: 20),
-                    text: 'Already have an account?',
+                    text: 'Already have an account? ',
                     children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
